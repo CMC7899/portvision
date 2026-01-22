@@ -77,21 +77,21 @@ export function SimulationDialog({ isOpen, onOpenChange }: SimulationDialogProps
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Yard Simulation</DialogTitle>
           <DialogDescription>
             Simulate adding new containers to predict congestion and operational impact.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 flex-1 overflow-y-auto min-h-0 pr-4">
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                     <Label htmlFor="numberOfContainers">Number of Containers</Label>
                     <Input id="numberOfContainers" type="number" {...form.register('numberOfContainers', { valueAsNumber: true })} />
                 </div>
                 {[
-                    { title: "Size Mix", fields: sizeMixFields, name: "sizeMix" },
+                    { title: "Size Mix (%)", fields: sizeMixFields, name: "sizeMix" },
                     { title: "Cargo Type Mix (%)", fields: cargoTypeMixFields, name: "cargoTypeMix" },
                     { title: "Priority Mix (%)", fields: priorityMixFields, name: "priorityMix" },
                 ].map((group) => (
@@ -100,9 +100,9 @@ export function SimulationDialog({ isOpen, onOpenChange }: SimulationDialogProps
                         <Card>
                             <CardContent className="p-4 space-y-2">
                             {group.fields.map((field, index) => (
-                                <div key={field.id} className="flex items-center gap-4">
-                                    <Label className="w-1/3 text-xs">{field.name}</Label>
-                                    <Input type="number" {...form.register(`${group.name}.${index}.value`, { valueAsNumber: true })} />
+                                <div key={field.id} className="grid grid-cols-3 items-center gap-4">
+                                    <Label className="text-xs col-span-1">{field.name}</Label>
+                                    <Input className="col-span-2" type="number" {...form.register(`${group.name}.${index}.value`, { valueAsNumber: true })} />
                                 </div>
                             ))}
                             </CardContent>
