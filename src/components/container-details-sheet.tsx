@@ -12,7 +12,14 @@ import { Button } from '@/components/ui/button';
 import { useYard } from '@/contexts/yard-context';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
-import { ArrowRight, Calendar, Ship, Tag, Weight } from 'lucide-react';
+import { ArrowRight, Calendar, Ship, Tag, Weight, CheckIcon, Dock, Rss, VenetianMask } from 'lucide-react';
+
+const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+  CheckIcon,
+  Dock,
+  Rss,
+  VenetianMask,
+};
 
 export function ContainerDetailsSheet() {
   const { activeContainer, setActiveContainer } = useYard();
@@ -58,11 +65,13 @@ export function ContainerDetailsSheet() {
                 <div className="space-y-4">
                      <h4 className="font-semibold">Timeline</h4>
                     <div className="relative pl-8">
-                    {activeContainer.timeline.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map((event, index, arr) => (
+                    {activeContainer.timeline.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map((event, index, arr) => {
+                        const IconComponent = event.iconName ? iconMap[event.iconName] : null;
+                        return (
                         <div key={event.id} className="flex gap-4 items-start">
                             <div className="absolute left-0 top-1.5 flex flex-col items-center">
                                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                    {event.icon ? <event.icon className="h-3 w-3" /> : null}
+                                    {IconComponent ? <IconComponent className="h-3 w-3" /> : null}
                                 </span>
                                 {index !== arr.length - 1 && <div className="h-12 w-px bg-border my-1" />}
                             </div>
@@ -72,7 +81,7 @@ export function ContainerDetailsSheet() {
                                 {event.details && <p className="text-sm mt-1">{event.details}</p>}
                             </div>
                         </div>
-                    ))}
+                    )})}
                     </div>
                 </div>
             </div>

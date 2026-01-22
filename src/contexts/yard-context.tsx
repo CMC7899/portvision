@@ -1,9 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import type { Yard, Container, Slot, CheckInFormValues, ContainerPriority, CargoType, ContainerSize } from '@/lib/types';
+import type { Yard, Container, Slot, CheckInFormValues } from '@/lib/types';
 import { getEtaPrediction } from '@/lib/actions';
-import { CheckIn, Rss, VenetianMask } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface YardContextType {
@@ -47,7 +46,7 @@ export function YardProvider({ children, initialState }: { children: ReactNode, 
           id: `evt-${values.containerId}-1`,
           timestamp: arrivalTimestamp,
           event: 'Container Checked In',
-          icon: CheckIn,
+          iconName: 'CheckIcon',
         }],
       };
 
@@ -64,7 +63,7 @@ export function YardProvider({ children, initialState }: { children: ReactNode, 
         timestamp: new Date().toISOString(),
         event: 'ETA Predicted',
         details: `${new Date(etaPrediction.predictedETA).toLocaleString()} - ${etaPrediction.reasoning}`,
-        icon: Rss,
+        iconName: 'Rss',
       });
 
       setContainers(prev => [...prev, newContainer]);
@@ -98,7 +97,7 @@ export function YardProvider({ children, initialState }: { children: ReactNode, 
             timestamp: new Date().toISOString(),
             event: 'Slot Assigned',
             details: `Assigned to slot ${slotId}`,
-            icon: VenetianMask,
+            iconName: 'VenetianMask',
           }]
         };
         return assignedContainer;

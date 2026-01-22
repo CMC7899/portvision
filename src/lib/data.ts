@@ -1,5 +1,4 @@
 import type { Container, Slot, Yard, ContainerSize, TimelineEvent } from './types';
-import { CheckIn, Dock } from 'lucide-react';
 
 // Simple pseudo-random number generator for deterministic results
 let seed = 1;
@@ -68,14 +67,14 @@ export function generateInitialYard(numInitialContainers: number = 15): Yard {
           timestamp: arrivalTimestamp,
           event: 'Container Checked In',
           details: `Arrived at port.`,
-          icon: CheckIn,
+          iconName: 'CheckIcon',
         },
         {
           id: `evt-${containerId}-2`,
           timestamp: new Date(new Date(arrivalTimestamp).getTime() + 1000*60*15).toISOString(),
           event: 'Slot Assigned',
           details: `Assigned to slot ${assignedSlot.id}.`,
-          icon: Dock,
+          iconName: 'Dock',
         }
       ];
 

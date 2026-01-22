@@ -28,7 +28,7 @@ export type TimelineEvent = {
   timestamp: string;
   event: string;
   details?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  iconName?: string;
 };
 
 export type Slot = {
