@@ -3,11 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin');
   
-  // Allow requests from the main domain and any subdomains.
-  const isAllowedOrigin = origin && (
-    origin === 'https://portvision-app.pages.dev' || 
-    origin.endsWith('.portvision-app.pages.dev')
-  );
+  // Allow requests from the deployed worker domain.
+  const isAllowedOrigin = origin && origin === 'https://demo.ndthanh20-9bb.workers.dev';
 
   if (isAllowedOrigin) {
     // Handle preflight requests
