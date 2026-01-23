@@ -3,8 +3,13 @@ import { type NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin');
   
-  // We only want to attach CORS headers if the request is coming from our specific domain.
-  if (origin === 'https://portvision-app.pages.dev') {
+  // Allow requests from the main domain and any subdomains.
+  const isAllowedOrigin = origin && (
+    origin === 'https://portvision-app.pages.dev' || 
+    origin.endsWith('.portvision-app.pages.dev')
+  );
+
+  if (isAllowedOrigin) {
     // Handle preflight requests
     if (request.method === 'OPTIONS') {
       const response = new NextResponse(null, { status: 204 });
