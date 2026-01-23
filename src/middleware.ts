@@ -1,33 +1,37 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const origin = request.headers.get('origin');
-  
-  // Allow requests from the deployed domain and its subdomains, and from localhost during development.
-  const isAllowedOrigin = 
-    origin && 
-    (origin.endsWith('.portvision-app.pages.dev') || origin.startsWith('http://localhost'));
+  // Handle preflight requests (OPTIONS) for CORS
+  if (request.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 204 });
+    const origin = request.headers.get('origin');
 
-  // If the origin is not allowed, we don't add any CORS headers.
-  if (!isAllowedOrigin) {
-    return NextResponse.next();
+    // Dynamically set the allowed origin based on the request.
+    // For production, you might want to restrict this to a specific list of domains.
+    if (origin) {
+        response.headers.set('Access-Control-Allow-Origin', origin);
+    }
+
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+    response.headers.set(
+      'Access-Control-Allow-Methods',
+      'POST, GET, OPTIONS' // Server Actions primarily use POST
+    );
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      // Allow Next.js specific headers for Server Actions
+      'Content-Type, Next-Action, Next-Router-State-Tree, Next-Router-Prefetch'
+    );
+
+    return response;
   }
-  
-  // Create a new response so we can modify headers
-  const response = request.method === 'OPTIONS' 
-    ? new NextResponse(null, { status: 204 }) // For preflight, return 204 No Content
-    : NextResponse.next();
 
-  // Add CORS headers to the response
-  response.headers.set('Access-Control-Allow-Origin', origin);
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  response.headers.set('Access-Control-Allow-Credentials', 'true');
-  
-  return response;
+  // For all other requests, just let them pass through.
+  return NextResponse.next();
 }
 
+// This config ensures the middleware runs on all paths, which is
+// necessary to catch the Server Action calls.
 export const config = {
-  // Apply this middleware to all paths to catch Server Action POST requests.
   matcher: '/:path*',
 };
